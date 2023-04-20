@@ -1,0 +1,40 @@
+# communication btw to containers in same the pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testpod
+spec:
+  containers:
+    - name: httpd
+      image: httpd
+      ports:
+        - containerPort: 80
+
+    - name: ubuntu
+      image: ubuntu
+      command: ["/bin/bash", "-c", "while true; do echo Hello; sleep 2; done;"]
+
+
+# comminication btw two pods in the same node
+# pod1.yml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testpod
+spec:
+  containers:
+    - name: httpd
+      image: httpd
+
+---
+# pod2.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testpod2
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+

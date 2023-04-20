@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testpod
+  labels:             # you can give any labels
+    type: pod-type
+    object: pod
+    env: production
+    name: xyz
+  annotations:
+    description: This is testpod
+spec:
+  containers:
+    - name: co1
+      image: ubuntu 
+      command: ["/bin/bash", "-c", "while true; do echo CO1; sleep 2; done;"]

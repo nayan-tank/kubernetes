@@ -1,0 +1,36 @@
+# Object Based Quota
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: myquota
+  labels:
+    type: object-based-quota
+spec:
+  hard:
+    pods: 2 # only two pods can exists in defined namespace
+    configmaps: 2
+    replicationcontrollers: 2
+    services: 2
+
+---
+# Compute Based Quota
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: myquota2
+  labels:
+    type: compute-based-quota
+spec:
+  hard:
+    limits.cpu: "100M" 
+    limits.memory: "100Mi" # or 0.1
+    requests.cpu: "200M" 
+    requests.memory: "200Mi" # or 0.2
+
+    # Keep in mind this three things
+      # 1. if you specify request and limit than it use accordingly
+      # 2. if you specify limit and not request then request will be equal to limit
+      # 3. if you specify request and not limit then limit will be equal to default limit of the Kubernetes cluster. 
+      #  This default limit is determined by the Kubernetes administrator
+      
+

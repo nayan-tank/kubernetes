@@ -1,0 +1,20 @@
+apiVersion: v1 
+kind: ReplicationController
+metadata:
+  name: my-replica-controller
+spec:
+  replicas: 2
+  selector:
+    type: app
+
+  template:
+    metadata:
+      name: testpod
+      labels:
+        type: app
+
+    spec:
+      containers:
+        - name: con1
+          image: nginx
+          

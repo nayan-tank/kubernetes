@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: testpod2
+  namespace: dev-namespace # pod will create in this namespace
+  labels:
+    name: xyz
+  annotations:
+    description: First pod
+spec:
+  containers:
+    - name: con1
+      image: ubuntu
+      imagePullPolicy: Always # always pull image from repo
+      # imagePullPolicy: IfNotPresent #  pull the image when it does not already exist on the node.
+      # imagePullPolicy: Never # will never pull the image
+      command: ["/bin/bash", "-c", "while true; do echo Hello; sleep 2; done;"]
+
+    - name: con2
+      image: redis
+      
+  restartPolicy: Never
+
+    

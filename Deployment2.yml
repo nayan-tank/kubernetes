@@ -1,0 +1,31 @@
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: my-deployment
+    annotations:
+      kubernetes.io/change-cause: "change nginx to httpd"
+  spec:
+    replicas: 2
+    revisionHistoryLimit: 15 # maximum number of revisions in version "apps/v1" is 10 by default.
+    minReadySeconds: 2 # time to take to be ready (default 0)
+    strategy: 
+      rollingUpdate:
+        maxSurge: 0 # maximum number of newly created pods beyond the "desired state" number of pods.(you can use percentage value also ex: 25%) (default 25%)
+        maxUnavailable: 2 # how many pods will go to new deploy at a time. (you can use percentage value also ex: 25%) (default 25%)
+      type: RollingUpdate # default type 
+    selector:
+      matchExpressions:
+        - key: user
+          operator: In
+          values: 
+            - devops  
+            - cloud
+    template:
+      metadata:
+        name: testpod
+        labels:
+          user: devops
+      spec: 
+        containers:
+          - name: con1
+            image: httpd

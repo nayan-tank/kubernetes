@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testpod
+  labels:
+     env: testing
+spec:
+   containers:
+      - name: con1
+        image: nginx
+   initContainers:
+      - name: initcon1
+        image: nginx
+        command: ["sleep", "10"]
+      - name: initcon2
+        image: nginx
+        args: ["sleep", "10"]
+        env:
+          - name: user
+            value: devops

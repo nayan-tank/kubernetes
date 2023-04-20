@@ -1,0 +1,74 @@
+# get version
+kubectl version
+
+# create and delete pods
+kubectl apply/delete -f [filename]
+kubectl delete pod [podname]
+
+# list of pods
+kubectl get pods -o wide / ns / nodes
+kubectl get pods --show-labels
+
+# full description
+kubectl describe pod [podname]
+or
+kubectl describe pod/name
+
+# get logs (what's running inside it)
+kubectl logs -f pods/[podname] 
+kubectl logs -f [podname] 
+
+kubectl logs -f pods/[podname] -c [container-name]
+
+# go inside container
+kubectl exec [podname] -it -c [container-name] -- /bin/bash
+kubectl exec [podname] -it -c [container-name] -- [command]
+
+# add lables to existing pod
+kubectl label pod mypod [label-name]=[value]
+
+# give labels to node
+kubectl label nodes [IP] [name]=[value]
+
+## TYPE OF SELECTORS 
+1. Equality Based
+    = (equal)
+    != (not equal)
+
+2. Set Based  
+    in, notin, exists
+
+
+# search by labels ( = )
+kubectl get pods -l [name]=[value]
+
+# list of pods where specified lables is not exists ( != )
+kubectl get pod -l [name]!=[value]
+
+# delete pods using lables
+kubectl delete pods -l [name]=[value]
+
+# search using set based operator
+kubectl get pods -l '[label-name] in (v1, v2, v3)'
+kubectl get pods -l l1=v1, l2=v2
+
+
+# get all replication-controller / replica-set / deployment / service / pod
+kubectl get rc / rs / deploy / svc / po
+
+# scale replicas using label name
+kubectl scale --replicas=2 rc -l [name]=[value]
+
+# scale deploy 
+kubectl scale deploy [name] --replicas=1 
+
+
+# rollout deployment
+kubectl rollout status deployment [name]
+kubectl rollout history deployment [name]
+kubectl rollout pause deployment [name]
+kubectl rollout resume deployment [name]
+kubectl rollout undo deployment [name]
+kubectl rollout undo deployment [name] --to-revision [n]
+
+# 

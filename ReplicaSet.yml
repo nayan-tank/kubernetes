@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myrs
+spec:
+  replicas: 2
+  selector:
+    matchExpressions:
+      - {key: myname, operator: In, values: [abc, xyz] }
+  template:
+    metadata:
+      name: testpod
+      labels: 
+        myname: abc
+    spec:
+      containers:
+        - name: c01
+          image: ubuntu
+          command: ["/bin/bash", "-c", "while true; do echo CO1; sleep 2; done;"]

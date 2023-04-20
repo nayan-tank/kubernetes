@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: my-replica-set
+  labels: 
+    env: testing
+spec:
+  replicas: 2
+  selector:
+    matchExpressions:
+      - {key: role, operator: In, values: [devops, cloud]}
+  
+  template:
+    metadata:
+      name: testpod
+      labels:
+        role: devops
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
