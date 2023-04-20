@@ -1,8 +1,0 @@
-{
-    "yaml.schemas": {
-        "https://json.schemastore.org/codecov.json": [
-            "file:///c%3A/Users/Nayan/Desktop/Cloud/K8S/pod.yml",
-            "file:///c%3A/Users/Nayan/Desktop/Cloud/K8S/deploy.yml"
-        ]
-    }
-}
