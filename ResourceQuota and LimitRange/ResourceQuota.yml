@@ -1,3 +1,5 @@
+# ResourceQuota is for limiting the total resource consumption of a namespace, for example:
+
 # Object Based Quota
 apiVersion: v1
 kind: ResourceQuota

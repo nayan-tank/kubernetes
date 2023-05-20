@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysvc
+spec:
+  type: NodePort
+  selector:
+    type: app # this label must mutch with pod label to distribute traffic
+  ports:
+    - nodePort: 30030 # valid ports range is 30000-32767
+      port: 8000
+      targetPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-svc
+spec:
+  type: LoadBalancer
+  # type: NodePort
+  # type: ClusterIP
+  selector:
+    type: app
+  ports:
+    - nodePort: 30030 # valid ports range is 30000-32767
+      port: 8000
+      targetPort: 80
+...
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testpod
+  labels:
+    type: app
+spec:
+  containers:
+    - name: con1
+      image: nginx

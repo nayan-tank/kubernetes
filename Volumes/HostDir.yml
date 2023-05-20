@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: hostdir-pod
+  labels:
+    type: hostdir
+spec:
+  containers:
+    - name: con1
+      image: httpd
+      volumeMounts:
+        - name: hostdir-pod
+          mountPath: '/tmp/volume1'
+
+volumes:
+  - name: hostdir-pod
+    hostPath:
+      path: '/tmp/volume1'

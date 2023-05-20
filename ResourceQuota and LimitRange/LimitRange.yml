@@ -1,0 +1,133 @@
+# LimitRangeis for managing constraints at a pod and container level within the project.
+
+apiVersion: v1
+kind: LimitRange
+metadata: 
+  name: my-limit-range
+  # namespace: dev-namespace
+spec:
+  limits:
+  - default: # default limit 
+      cpu: 0.5
+      memory: 100Mi
+    defaultRequest:
+      cpu: .5
+      memory: 100Mi
+    max:
+      memory: 2Gi 
+      cpu: 2
+    min: 
+      cpu: 0.5
+      memory: 100Mi
+    type: Container
+
+
+--- 
+
+apiVersion: v1
+kind: LimitRange
+metadata: 
+  name: my-limit-range
+spec:
+  limits:
+  - default: # default limit 
+      cpu: 0.5
+      memory: 100Mi
+    defaultRequest:
+      cpu: .5
+      memory: 100Mi
+    type: Container
+
+--- 
+
+apiVersion: v1
+kind: LimitRange
+metadata: 
+  name: default-limit
+spec:
+  limits:
+  - default: # default limit 
+      cpu: 0.5
+      memory: 100Mi
+    type: Container
+
+---
+
+apiVersion: v1
+kind: LimitRange
+metadata: 
+  name: default-request
+spec:
+  limits:
+  - defaultRequest:
+      cpu: .5
+      memory: 100Mi
+    type: Container
+
+
+---
+
+apiVersion: v1
+kind: LimitRange
+metadata: 
+  name: min-max-limit-range
+spec:
+  limits:
+  - max:
+      memory: 2Gi 
+      cpu: 2
+    min: 
+      cpu: 0.5
+      memory: 100Mi
+    type: Container
+
+--- 
+apiVersion: v1
+kind: LimitRange
+metadata: 
+  name: min-limit-range
+spec:
+  limits:
+  - min: 
+      cpu: 0.5
+      memory: 100Mi
+    type: Container
+
+---
+apiVersion: v1
+kind: LimitRange
+metadata: 
+  name: max-limit-range
+spec:
+  limits:
+  - max:
+      memory: 2Gi 
+      cpu: 2
+    type: Container
+
+---
+apiVersion: v1
+kind: LimitRange
+metadata: 
+  name: max-limit-request-ratio
+spec:
+  limits:
+  - maxLimitRequestRatio:
+      memory: 2
+      cpu: 2
+    type: Container
+
+# example:
+  # limit: 100
+  # request: 10
+  # 100/10 = 10 (not allowed)
+
+  # limit: 100
+  # request: 50
+  # 100/50 = 2 (allowed)
+
+  # limit: 150
+  # request: 100
+  # 150/100 = 1.5 (allowed)
+
+  # allows less than or equal to 2 only

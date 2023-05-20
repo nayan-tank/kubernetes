@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: pc-deploy
+spec:
+  replicas: 2
+  labels:
+    name: pc-deploy
+  template:
+    metadata:
+      labels: 
+        name: pc-deploy
+    spec:
+      containers: 
+        - name: con1
+          image: nginx
+          volumeMounts:
+            - name: my-volume
+              mountPath: /tmp/volume1
+              
+
+volumes:
+  - name: my-volume
+    persistentVolumeClaim: 
+      claimName: myebsvolclaim

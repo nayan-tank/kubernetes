@@ -1,0 +1,7 @@
+Resource Quota and Limit Range are both Kubernetes objects that are used to manage and control resource allocation in a Kubernetes cluster, but they have different purposes.
+
+Resource Quota is used to specify limits on resource consumption by Kubernetes objects, such as pods, deployments, and services. With Resource Quota, you can set limits on the number of pods, CPU, memory, and other resources that can be consumed by a specific Kubernetes namespace or a set of objects in a namespace. Resource Quota can be used to prevent resource overconsumption, improve cluster stability and avoid potential outages.
+
+Limit Range, on the other hand, is used to set default resource requests and limits for a specific namespace. With Limit Range, you can define default CPU and memory requests and limits for all containers in a namespace, so that you don't have to specify these values for each container separately. This helps to streamline the deployment process and ensure that resources are used efficiently.
+
+In summary, Resource Quota is used to set limits on resource consumption, while Limit Range is used to set default resource requests and limits. Both Resource Quota and Limit Range are important tools for managing resource allocation in a Kubernetes cluster and ensuring that resources are used efficiently.
