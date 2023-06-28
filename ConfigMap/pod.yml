@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+  labels:
+    name: myapp
+spec:
+  containers:
+  - name: myapp
+    image: nginx
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+    # inject whole env file
+    envFrom:
+      - configMapRef: 
+          name: app-config
+
+    # inject specific varible
+    env:
+      - name: USERNAME # your var-name
+        valueFrom: 
+          configMapKeyRef: 
+            name: app-config # configMap name
+            key: USERNAME # var-name of file
+
+    volumeMounts:
+        - name: app-config-volume
+          mountPath: '/tmp/app-config-volume'
+
+
+
+## var from volume
+volumes:
+  - name:  app-config-volume
+    configMap:
+      name: app-config
+      
+
+## Specific Variable
+# volumes:
+#   - name:  app-config-volume
+#     configMap:
+#       name: app-config
+#       items: 
+#         - key: USERNAME
+#           path: '/tmp/username'
+...
+

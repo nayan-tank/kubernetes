@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: testpod
+  namespace: dev-namespace # pod will create in this namespace
+  labels:
+    name: xyz
+  annotations:
+    description: First pod
+spec:
+  serviceAccount: mysa
+  containers:
+    - name: con1
+      image: ubuntu
+      imagePullPolicy: Always # always pull image from repo
+      command: ["/bin/bash", "-c", "while true; do echo Hello; sleep 2; done;"]      

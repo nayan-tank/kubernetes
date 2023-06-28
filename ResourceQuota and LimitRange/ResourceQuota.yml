@@ -24,15 +24,16 @@ metadata:
     type: compute-based-quota
 spec:
   hard:
-    limits.cpu: "100M" 
-    limits.memory: "100Mi" # or 0.1
     requests.cpu: "200M" 
     requests.memory: "200Mi" # or 0.2
+    limits.cpu: "100M" 
+    limits.memory: "100Mi" # or 0.1
+    
 
     # Keep in mind this three things
-      # 1. if you specify request and limit than it use accordingly
-      # 2. if you specify limit and not request then request will be equal to limit
+      # 1. if you specify request and limit than it'll use accordingly
+      # 2. if you specify limit but not request then request will be equal to limit
       # 3. if you specify request and not limit then limit will be equal to default limit of the Kubernetes cluster. 
-      #  This default limit is determined by the Kubernetes administrator
+      #  This default limit should be determined by the Kubernetes administrator
       
 

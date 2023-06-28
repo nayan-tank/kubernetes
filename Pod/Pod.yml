@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: testpod2
+  namespace: dev-namespace # pod will create in this namespace
+  labels:
+    name: xyz
+  annotations:
+    description: First pod
+spec:
+  automountServiceAccountToken: false
+  securityContext: # pod level security context
+    runAsUser: 1000
+  containers:
+    - name: con1
+      image: ubuntu
+      imagePullPolicy: Always # always pull image from repo
+      # imagePullPolicy: IfNotPresent #  pull the image when it does not already exist on the node.
+      # imagePullPolicy: Never # will never pull the image
+      command: ["/bin/bash", "-c", "while true; do echo Hello; sleep 2; done;"]      
+      resources:
+        requests:
+          memory: 10Mi
+          cpu: 10M
+        limits: 
+          memory: 30M
+          cpu: 200M 
+  restartPolicy: Never
+...
+
+---
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: testpod2
+  namespace: dev-namespace # pod will create in this namespace
+  labels:
+    name: xyz
+  annotations:
+    description: First pod
+spec:
+  containers:
+    - name: con1
+      image: ubuntu
+      imagePullPolicy: Always # always pull image from repo
+      # imagePullPolicy: IfNotPresent #  pull the image when it does not already exist on the node.
+      # imagePullPolicy: Never # will never pull the image
+      command: ["/bin/bash", "-c", "while true; do echo Hello; sleep 2; done;"]
+      securityContext: #  container level security context
+        runAsUser: 1000
+        capabilities:
+          add: ["MAC_ADMIN"]
+          drop: ["NAT_ADMIN"]
+  restartPolicy: Never
+
+
+     
+
+

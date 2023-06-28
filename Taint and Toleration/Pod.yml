@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp3
+  labels:
+    name: myapp
+spec:
+  tolerations:
+    - key: "exists"
+      operator: "Equal"
+      value: "no"
+      effect: "NoSchedule"
+  # nodeName: controlplane
+  containers:
+  - name: myapp
+    image: nginx
+    ports:
+      - containerPort: 80
+    
+

@@ -71,4 +71,10 @@ kubectl rollout resume deployment [name]
 kubectl rollout undo deployment [name]
 kubectl rollout undo deployment [name] --to-revision [n]
 
-# 
+# service account
+
+kubectl create sa <name>
+kubectl get sa
+
+# token for sa
+kubectl create token <sa-name>
