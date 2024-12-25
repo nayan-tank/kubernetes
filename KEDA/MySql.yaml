@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secrets
+  namespace: my-project
+type: Opaque
+data:
+  mysql_conn_str: dXNlckB0Y3AobXlzcWw6MzMwNikvc3RhdHNfZGI= # base64 encoded value of mysql connectionString of format user:password@tcp(mysql:3306)/stats_db
+
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth-mysql-secret
+  namespace: my-project
+spec:
+  secretTargetRef:
+  - parameter: connectionString
+    name: mysql-secrets
+    key: mysql_conn_str
+
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: mysql-scaledobject
+  namespace: my-project
+spec:
+  scaleTargetRef:
+    name: worker
+  triggers:
+  - type: mysql
+    metadata:
+      queryValue: "4.4"
+      activationQueryValue: "5.4"
+      query: "SELECT CEIL(COUNT(*) / 6) FROM task_instance WHERE state='running' OR state='queued'"
+    authenticationRef:
+      name: keda-trigger-auth-mysql-secret

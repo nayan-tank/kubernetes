@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: test-secrets
+data:
+  AWS_ACCESS_KEY_ID: <encoded-user-id> # Required.
+  AWS_SECRET_ACCESS_KEY: <encoded-key> # Required.
+  AWS_SESSION_TOKEN: <encoded-session-token> # Required when using temporary credentials.
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth-aws-credentials
+  namespace: keda-test
+spec:
+  secretTargetRef:
+  - parameter: awsAccessKeyID     # Required.
+    name: test-secrets            # Required.
+    key: AWS_ACCESS_KEY_ID        # Required.
+  - parameter: awsSecretAccessKey # Required.
+    name: test-secrets            # Required.
+    key: AWS_SECRET_ACCESS_KEY    # Required.
+  - parameter: awsSessionToken    # Required when using temporary credentials.
+    name: test-secrets            # Required when using temporary credentials.
+    key: AWS_SESSION_TOKEN        # Required when using temporary credentials.
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: aws-cloudwatch-queue-scaledobject
+  namespace: keda-test
+spec:
+  scaleTargetRef:
+    name: nginx-deployment
+  triggers:
+  - type: aws-cloudwatch
+    metadata:
+      namespace: AWS/SQS
+      dimensionName: QueueName
+      dimensionValue: keda
+      metricName: ApproximateNumberOfMessagesVisible
+      targetMetricValue: "2.1"
+      minMetricValue: "0"
+      awsRegion: "eu-west-1"
+    authenticationRef:
+      name: keda-trigger-auth-aws-credentials
+
+...
+
+triggers:
+- type: aws-cloudwatch
+  metadata:
+    # Optional: namespace
+    namespace: AWS/SQS
+    # Optional: Dimension Name
+    dimensionName: QueueName
+    # Optional: Dimension Value
+    dimensionValue: keda
+    # Optional: Expression query
+    expression: SELECT MAX("ApproximateNumberOfMessagesVisible") FROM "AWS/SQS" WHERE QueueName = 'keda'
+    # Optional: metricName
+    metricName: ApproximateNumberOfMessagesVisible
+    targetMetricValue: "2.1"
+    minMetricValue: "1.5"
+    # Optional: ignoreNullValues
+    ignoreNullValues: false
+    # Required: region
+    awsRegion: "eu-west-1"
+    # Optional: AWS endpoint url
+    awsEndpoint: ""
+    # Optional: AWS Access Key ID, can use TriggerAuthentication as well
+    awsAccessKeyIDFromEnv: AWS_ACCESS_KEY_ID # default AWS_ACCESS_KEY_ID
+    # Optional: AWS Secret Access Key, can use TriggerAuthentication as well
+    awsSecretAccessKeyFromEnv: AWS_SECRET_ACCESS_KEY # default AWS_SECRET_ACCESS_KEY
+    # DEPRECATED: This parameter is deprecated as of KEDA v2.13 and will be removed in v3. Optional # Optional. Default: pod
+    identityOwner: pod | operator
+    # Optional: Collection Time
+    metricCollectionTime: "300" # default 300
+    # Optional: Metric Statistic
+    metricStat: "Average" # default "Average"
+    # Optional: Metric Statistic Period
+    metricStatPeriod: "300" # default 300
+    # Optional: Metric Unit
+    metricUnit: "Count" # default ""
+    # Optional: Metric EndTime Offset
+    metricEndTimeOffset: "60" # default 0

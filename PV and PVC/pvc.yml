@@ -8,3 +8,125 @@ spec:
   resources:
     requests:
       storage: 1Gi
+
+...
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: foo-pv
+spec:
+  storageClassName: ""
+  claimRef: # Specify the relevant PersistentVolumeClaim in the claimRef field of the PV so that other PVCs can not bind to it.
+    name: foo-pvc
+    namespace: foo 
+
+...
+# Static Provisioning
+#In this approach, the PV is manually created by the cluster administrator.
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: example-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/data
+
+...
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: example-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+...
+# Dynamic Provisioning
+# If a StorageClass is configured, PVCs can dynamically provision a PV.
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-storage
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+  fsType: ext4
+
+...
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dynamic-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: fast-storage
+
+... 
+# Selector matchLabels and matchExpressions
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: labeled-pv
+  labels:
+    environment: production
+    app: database
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/data
+
+...
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: selector-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  selector:
+    matchLabels:
+      environment: production
+      app: database
+
+...
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: advanced-selector-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  selector:
+    matchExpressions:
+      - key: environment
+        operator: In
+        values:
+          - production
+          - staging
+      - key: app
+        operator: Exists
