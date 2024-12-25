@@ -5,7 +5,7 @@ metadata:
 spec:
   strategy:
     type: Recreate
-  replicas: 2
+  replicas: 3
   selector: 
     matchLabels:
       # name: deployment
@@ -20,6 +20,3 @@ spec:
       containers:
         - name: co1
           image: nginx
-        - name: co2
-          image: nginx
-  
