@@ -20,4 +20,6 @@ spec:
       containers:
         - name: co1
           image: nginx
+        - name: co2
+          image: nginx
   
