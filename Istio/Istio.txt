@@ -1,0 +1,91 @@
+######### Istio #########
+
+istioctl install --set profile=demo -y 
+istioctl verify-install
+
+minikube start --vm=true
+minikube delete 
+
+minikube addons enable ingress 
+
+istioctl version 
+istioctl analyze
+
+Istio Injection ?
+- Add a namespace label to instruct Istio to automatically inject Envoy sidecar proxies when you deploy your application later
+kubectl label namespace default istio-injection=enabled/disabled
+
+
+
+######### Kiali #########
+To visualize service mesh 
+
+kubectl -n istio-system get svc kiali 
+istionctl dashboard kiali
+
+Virtual Service
+===============
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+	name: bookinfo
+spec:
+	hosts:
+	- "bookinfo.app"
+	gateway:
+	- bookinfo-gateway
+	http:
+	- match:
+		- url:
+			exact: /productpage
+		- url: 
+			prefix: /static
+		- url: 
+			exact: /login
+		- url: 
+			exact: /logout 	
+	route:
+	- destination:
+		host: productpage
+		port: 
+			number: 9080
+
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+	name: reviews
+spec:
+	hosts:
+	- reviews
+	http:
+	- route:
+		- destination:
+			host: reviews
+			subset: v1
+		  weight: 99
+
+		- destination:
+			host: reviews
+			subset: v2
+		  weight: 1
+	
+
+Destination Rule
+================
+
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+	name: reviews-destination
+spec:
+	host: review
+	subsets:
+	- name: v1
+	  labels:
+		version: v1
+	- name: v2
+	  labels:
+		version: v2
+
